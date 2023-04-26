@@ -10,8 +10,8 @@ async function findUserAccount(requestUsername, requestEmail) {
   });
 }
 
-function insertNewUserAccountToDatabase(newUser) {
-  return userDatabase.insert(newUser);
+async function insertNewUserAccountToDatabase(newUser) {
+  return await userDatabase.insert(newUser);
 }
 
 module.exports = { findUserAccount, insertNewUserAccountToDatabase };

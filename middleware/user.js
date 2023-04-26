@@ -7,7 +7,7 @@ async function validateSignUpBodyRequest(request, response, next) {
     response.status(500).json({
       status: false,
       message:
-        "'username', 'email' & 'password', is required. please try again",
+        " 'username', 'email' & 'password', is required. please try again",
     });
   } else {
     next();

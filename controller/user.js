@@ -1,4 +1,4 @@
-const createUserID = require('../utils/uuid');
+const createID = require('../utils/uuid');
 const { hashPassword, comparePassword } = require('../bcryptjs/bcrypt');
 const {
   insertNewUserAccountToDatabase,
@@ -9,7 +9,7 @@ const { signNewToken } = require('../jsonwebtoken/jwt');
 // create new user account
 async function signUpNewUser(request, response) {
   const { username, email, password } = request.body;
-  const id = createUserID();
+  const id = createID();
   const hashedPassword = await hashPassword(password);
   if (username && email && password) {
     insertNewUserAccountToDatabase({ username, email, hashedPassword, id });
