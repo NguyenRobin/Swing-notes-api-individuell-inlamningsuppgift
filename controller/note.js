@@ -9,13 +9,19 @@ const {
 const createID = require('../utils/uuid');
 
 async function getAllNotes(request, response) {
-  const allNotes = await getNotes();
-  if (allNotes.length > 0) {
-    response.status(200).json({ status: true, notes: allNotes });
-  } else {
+  try {
+    const allNotes = await getNotes();
+    if (allNotes.length > 0) {
+      response.status(200).json({ status: true, notes: allNotes });
+    } else {
+      response
+        .status(200)
+        .json({ status: true, message: 'You have no current notes' });
+    }
+  } catch (error) {
     response
-      .status(200)
-      .json({ status: true, message: 'You have no current notes' });
+      .status(500)
+      .json({ status: false, error: 'Something went wrong. Please try again' });
   }
 }
 
@@ -42,12 +48,12 @@ async function createNewNote(request, response) {
 async function deleteNote(request, response) {
   const { id } = request.params;
   const noteExist = await findNote(id);
-
+  console.log(noteExist);
   if (noteExist) {
     deleteNoteFromDatabase(id);
     response.status(200).json({
       status: true,
-      message: `Note ID: ${noteExist} successfully deleted`,
+      message: `Note ID: ${noteExist.id} successfully deleted`,
     });
   } else {
     response.status(404).json({ status: false, message: `ID not found!` });
@@ -82,9 +88,18 @@ async function updateNote(request, response) {
 }
 
 async function getTitle(request, response) {
-  const { title } = request.query;
-  const noteTitle = await findNoteTitle(title);
-  response.status(200).json({ status: true, title: noteTitle });
+  try {
+    const { title } = request.query;
+    const noteTitle = await findNoteTitle(title);
+    if (noteTitle) {
+      response.status(200).json({ status: true, title: noteTitle });
+    }
+  } catch (error) {
+    response.status(500).json({
+      status: false,
+      error: 'Something went wrong. Please try again',
+    });
+  }
 }
 
 module.exports = {

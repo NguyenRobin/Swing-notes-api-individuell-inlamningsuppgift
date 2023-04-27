@@ -45,8 +45,8 @@ async function loginUser(request, response) {
       response.status(200).json(result);
     } else {
       return response
-        .status(200)
-        .json({ status: true, message: 'Invalid Password' });
+        .status(400)
+        .json({ status: false, message: 'Invalid Password' });
     }
   } else {
     return response.status(401).json({

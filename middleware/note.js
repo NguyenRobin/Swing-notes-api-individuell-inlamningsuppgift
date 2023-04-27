@@ -3,7 +3,7 @@ const { findNote, findNoteTitle } = require('../model/note');
 async function validateNewNoteRequest(request, response, next) {
   const { title, text } = request.body;
   if (!title || !text) {
-    response.status(500).json({
+    response.status(404).json({
       status: false,
       message: " 'title' & 'text' is required. please try again",
     });
@@ -46,7 +46,7 @@ async function validateParams(request, response, next) {
     next();
   } else {
     response
-      .status(500)
+      .status(404)
       .json({ status: false, message: 'No matching ID found!' });
   }
 }
@@ -56,7 +56,7 @@ async function validateUpdateTitleOrText(request, response, next) {
   if (title || text) {
     next();
   } else {
-    response.status(500).json({
+    response.status(404).json({
       status: false,
       message: " 'title' or 'text' is required. Please try again",
     });

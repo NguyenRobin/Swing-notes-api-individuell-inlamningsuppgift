@@ -1,0 +1,485 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Swing notes API",
+    "description": "API for notes",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "http://localhost:8000" }],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "description": "Bearer token to access note endpoints. You will need to make a post request to /api/user/login, with the token you receive, add it this field.",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/user/signup": {
+      "post": {
+        "tags": ["User"],
+        "summary": "- Create a new user",
+        "description": null,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200 ✅": {
+            "description": "User successfully created and added to database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400 ⛔️": {
+            "description": "User could not be created. Please try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "- Login and access token",
+        "description": null,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": { "type": "string" },
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200 ✅": {
+            "description": "User successfully logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "username": { "type": "string" },
+                    "email": { "type": "string" },
+                    "token": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400 ⛔️": {
+            "description": "Invalid Password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401 ⛔️": {
+            "description": "User not able to login . Please try again later.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notes": {
+      "get": {
+        "tags": ["Note"],
+        "summary": "- Get all notes",
+        "description": null,
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access all notes with valid token. Remove 'add_your_token_here' and add your token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer add_your_token_here"
+            }
+          }
+        ],
+        "responses": {
+          "200 ✅": {
+            "description": "Token is valid and notes is available in database.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "notes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "title": { "type": "string" },
+                          "text": { "type": "string" },
+                          "createdAt": { "type": "string" },
+                          "_id": { "type": "string" },
+                          "modifiedAt": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401 ⛔️": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Note"],
+        "summary": "- Add note to database",
+        "description": null,
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Remove 'add_your_token_here' and add your own token. To be able to add note",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer add_your_token_here"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "text": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200 ✅": {
+            "description": "With a valid token and if the request body contain 'title' and 'text' a new note will be added to the database.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401 ⛔️": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404 ⛔️": {
+            "description": "'title' & 'text' is required. please try again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notes/search": {
+      "get": {
+        "tags": ["Note"],
+        "summary": "- Search and get title",
+        "description": null,
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Remove 'add_your_token_here' and add your own token. To be able to search for a title",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer add_your_token_here"
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Search for title",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200 ✅": {
+            "description": "With a valid token and if the search query finds a match in the database. The title or titles will be return as an object in an array containing additional information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "title": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "title": { "type": "string" },
+                          "text": { "type": "string" },
+                          "createdAt": { "type": "string" },
+                          "_id": { "type": "string" },
+                          "modifiedAt": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401 ⛔️": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notes/{id}": {
+      "delete": {
+        "tags": ["Note"],
+        "summary": "- Delete note from database",
+        "description": null,
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Remove 'add_your_token_here' and add your own token. To be able to delete note",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer add_your_token_here"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200 ✅": {
+            "description": "With a valid token and if the search query finds a match in the database. The title or titles will be return as an object in an array containing additional information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401 ⛔️": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404 ⛔️": {
+            "description": "No matching ID found!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Note"],
+        "summary": "- Change a note",
+        "description": null,
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Remove 'add_your_token_here' and add your own token. To be able to change note",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer add_your_token_here"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200 ✅": {
+            "description": "With a valid token and if the request params finds a match in the database. The 'title' and 'text' will be changed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401 ⛔️": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404 ⛔️": {
+            "description": "No matching ID found!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
