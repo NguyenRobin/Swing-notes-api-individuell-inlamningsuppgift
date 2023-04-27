@@ -9,6 +9,12 @@ async function validateSignUpBodyRequest(request, response, next) {
       message:
         " 'username', 'email' & 'password', is required. please try again",
     });
+  }
+  if (username && !email.includes('@') && password) {
+    response.status(500).json({
+      status: false,
+      message: 'Please enter a valid Email',
+    });
   } else {
     next();
   }
@@ -21,7 +27,7 @@ async function validateUsernameOrEmail(request, response, next) {
     response.status(200).json({
       status: false,
       message: `${
-        username === accountExist.username ? 'username' : 'email'
+        username === accountExist.username ? 'Username' : 'Email'
       } already exist.`,
     });
   } else {
