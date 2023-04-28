@@ -435,6 +435,19 @@
             "required": true
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "text": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200 ✅": {
             "description": "With a valid token and if the request params finds a match in the database. The 'title' and 'text' will be changed.",

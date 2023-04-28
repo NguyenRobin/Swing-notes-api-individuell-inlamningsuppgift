@@ -4,14 +4,14 @@ const { findUserAccount } = require('../model/user');
 async function validateSignUpBodyRequest(request, response, next) {
   const { username, email, password } = request.body;
   if (!username || !email || !password) {
-    response.status(500).json({
+    return response.status(400).json({
       status: false,
       message:
         " 'username', 'email' & 'password', is required. please try again",
     });
   }
   if (username && !email.includes('@') && password) {
-    response.status(500).json({
+    return response.status(400).json({
       status: false,
       message: 'Please enter a valid Email',
     });
@@ -24,7 +24,7 @@ async function validateUsernameOrEmail(request, response, next) {
   const { username, email } = request.body;
   const accountExist = await findUserAccount(username, email);
   if (accountExist) {
-    response.status(200).json({
+    response.status(409).json({
       status: false,
       message: `${
         username === accountExist.username ? 'Username' : 'Email'
@@ -41,7 +41,7 @@ function validateLoginBodyRequest(request, response, next) {
   if ((username && password) || (email && password)) {
     next();
   } else {
-    response.status(500).json({
+    response.status(400).json({
       status: false,
       message:
         "Properties: 'username' or 'email' and 'password' are required. ",

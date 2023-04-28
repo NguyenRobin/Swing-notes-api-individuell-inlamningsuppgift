@@ -1,9 +1,9 @@
-const { findNote, findNoteTitle, getNotes } = require('../model/note');
+const { findNote, findNoteTitle } = require('../model/note');
 
 async function validateNewNoteRequest(request, response, next) {
   const { title, text } = request.body;
   if (!title || !text) {
-    response.status(404).json({
+    response.status(400).json({
       status: false,
       message: " 'title' & 'text' is required. please try again",
     });
@@ -17,20 +17,25 @@ async function validateTextAndTitle(request, response, next) {
   const titleMaxLength = 50;
   const textMaxLength = 300;
 
-  if (title.length > titleMaxLength && text.length > textMaxLength) {
-    return response.status(200).json({
+  if (
+    title &&
+    text &&
+    title.length > titleMaxLength &&
+    text.length > textMaxLength
+  ) {
+    return response.status(403).json({
       status: true,
       message: `Invalid title and text size. Title must be lower than ${titleMaxLength} characters and text lower than ${textMaxLength} characters`,
     });
   }
-  if (title.length > titleMaxLength) {
-    return response.status(200).json({
+  if (title && title.length > titleMaxLength) {
+    return response.status(403).json({
       status: true,
       message: `Invalid title size. Title must be lower than ${titleMaxLength} characters`,
     });
   }
-  if (text.length > textMaxLength) {
-    return response.status(200).json({
+  if (text && text.length > textMaxLength) {
+    return response.status(403).json({
       status: true,
       message: `Invalid text size. Text must be lower than ${textMaxLength} characters`,
     });
@@ -56,7 +61,7 @@ async function validateUpdateTitleOrText(request, response, next) {
   if (title || text) {
     next();
   } else {
-    response.status(404).json({
+    response.status(400).json({
       status: false,
       message: " 'title' or 'text' is required. Please try again",
     });

@@ -19,9 +19,10 @@ async function getAllNotes(request, response) {
         .json({ status: true, message: 'You have no current notes' });
     }
   } catch (error) {
-    response
-      .status(500)
-      .json({ status: false, error: 'Something went wrong. Please try again' });
+    response.status(500).json({
+      status: false,
+      error: 'Something went wrong on the server. Please try again!',
+    });
   }
 }
 
@@ -30,33 +31,39 @@ async function createNewNote(request, response) {
     const { title, text } = request.body;
     const id = createID();
     const createdAt = new Date().toLocaleDateString();
-    // const modifiedAt = new Date().toISOString();
-
-    insertNewNoteToDatabase({ id, title, text, createdAt });
-    response.status(200).json({
-      status: true,
-      message: 'New note successfully added to database',
-    });
+    if (title && text) {
+      insertNewNoteToDatabase({ id, title, text, createdAt });
+      response.status(200).json({
+        status: true,
+        message: 'New note successfully added to database',
+      });
+    }
   } catch (error) {
     response.status(500).json({
       status: false,
-      error: 'Something went wrong. Please try again!',
+      error: 'Something went wrong on the server. Please try again!',
     });
   }
 }
 
 async function deleteNote(request, response) {
-  const { id } = request.params;
-  const noteExist = await findNote(id);
-  console.log(noteExist);
-  if (noteExist) {
-    deleteNoteFromDatabase(id);
-    response.status(200).json({
-      status: true,
-      message: `Note ID: ${noteExist.id} successfully deleted`,
+  try {
+    const { id } = request.params;
+    const noteExist = await findNote(id);
+    if (noteExist) {
+      deleteNoteFromDatabase(id);
+      response.status(200).json({
+        status: true,
+        message: `Note ID: ${noteExist.id} successfully deleted`,
+      });
+    } else {
+      response.status(404).json({ status: false, message: `ID not found!` });
+    }
+  } catch (error) {
+    response.status(500).json({
+      status: false,
+      error: 'Something went wrong on the server. Please try again!',
     });
-  } else {
-    response.status(404).json({ status: false, message: `ID not found!` });
   }
 }
 
@@ -84,7 +91,7 @@ async function updateNote(request, response) {
   } catch (error) {
     response.status(500).json({
       status: false,
-      error: 'Something went wrong. Please try again',
+      error: 'Something went wrong on the server. Please try again!',
     });
   }
 }
@@ -99,7 +106,7 @@ async function getTitle(request, response) {
   } catch (error) {
     response.status(500).json({
       status: false,
-      error: 'Something went wrong. Please try again',
+      error: 'Something went wrong on the server. Please try again!',
     });
   }
 }
