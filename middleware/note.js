@@ -65,10 +65,8 @@ async function validateUpdateTitleOrText(request, response, next) {
 
 async function validateTitle(request, response, next) {
   const { title } = request.query;
-  const minStringLengthMatch = 1;
   const titleExist = await findNoteTitle(title);
-  // console.log(titleExist);
-  if (titleExist.length > 0 && title.length > minStringLengthMatch) {
+  if (titleExist && titleExist.length > 0) {
     next();
   } else {
     response
