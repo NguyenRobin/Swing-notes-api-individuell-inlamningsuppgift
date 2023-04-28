@@ -78,9 +78,9 @@
       "post": {
         "tags": ["User"],
         "summary": "- Login and access token",
-        "description": null,
         "requestBody": {
           "required": true,
+          "description": "You can login to your account with 'username', 'email' and 'password' together, or with 'username' and 'password', or with 'email' and 'password'",
           "content": {
             "application/json": {
               "schema": {
@@ -436,6 +436,7 @@
           }
         ],
         "requestBody": {
+          "description": "You can change the 'title' and the 'text' together, or the 'title' individually, or the 'text' individually",
           "content": {
             "application/json": {
               "schema": {
