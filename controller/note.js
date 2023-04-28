@@ -64,7 +64,9 @@ async function updateNote(request, response) {
   try {
     const { title, text } = request.body;
     const { id } = request.params;
-    const modifiedAt = new Date().toLocaleDateString();
+    const date = new Date().toLocaleDateString('se-SV');
+    const time = new Date().toLocaleTimeString('se-SV');
+    const modifiedAt = `${date} ${time}`;
     const note = await findNote(id);
 
     if (note) {
