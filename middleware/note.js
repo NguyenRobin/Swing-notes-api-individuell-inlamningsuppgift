@@ -1,4 +1,4 @@
-const { findNote, findNoteTitle } = require('../model/note');
+const { findNote, findNoteTitle, getNotes } = require('../model/note');
 
 async function validateNewNoteRequest(request, response, next) {
   const { title, text } = request.body;
@@ -64,10 +64,11 @@ async function validateUpdateTitleOrText(request, response, next) {
 }
 
 async function validateTitle(request, response, next) {
-  // ! maybe check for lowercase and also not show strict search. maybe sho correct word match aslo
   const { title } = request.query;
+  const minStringLengthMatch = 1;
   const titleExist = await findNoteTitle(title);
-  if (titleExist.length > 0) {
+  // console.log(titleExist);
+  if (titleExist.length > 0 && title.length > minStringLengthMatch) {
     next();
   } else {
     response

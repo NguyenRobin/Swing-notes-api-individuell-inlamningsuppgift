@@ -1,4 +1,5 @@
 const Datastore = require('nedb-promises');
+const { title } = require('process');
 
 const noteDatabase = new Datastore({
   filename: './database/noteDatabase.db',
@@ -13,7 +14,18 @@ async function findNote(requestedID) {
   return await noteDatabase.findOne({ id: requestedID });
 }
 async function findNoteTitle(requestQuery) {
-  return await noteDatabase.find({ title: requestQuery });
+  const search = requestQuery.toLowerCase().split(' ');
+  const allNotes = await getNotes();
+  for (const titles of allNotes) {
+    const title = titles.title.toLowerCase();
+    for (const word of search) {
+      if (title.includes(word)) {
+        // create a regex for each word, then make it insensitive to be able to find it in database
+        const createRegex = new RegExp(word, 'i');
+        return await noteDatabase.find({ title: createRegex });
+      }
+    }
+  }
 }
 
 async function insertNewNoteToDatabase(newNote) {
