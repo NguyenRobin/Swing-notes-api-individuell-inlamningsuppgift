@@ -14,4 +14,16 @@ async function insertNewUserAccountToDatabase(newUser) {
   return await userDatabase.insert(newUser);
 }
 
-module.exports = { findUserAccount, insertNewUserAccountToDatabase };
+async function findUserByID(id) {
+  return await userDatabase.findOne({ user_id: id });
+}
+
+async function findAllUsers() {
+  return await userDatabase.find({});
+}
+module.exports = {
+  findUserAccount,
+  insertNewUserAccountToDatabase,
+  findUserByID,
+  findAllUsers,
+};

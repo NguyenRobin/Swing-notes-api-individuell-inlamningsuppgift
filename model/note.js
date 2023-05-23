@@ -1,5 +1,4 @@
 const Datastore = require('nedb-promises');
-const { title } = require('process');
 
 const noteDatabase = new Datastore({
   filename: './database/noteDatabase.db',
@@ -55,6 +54,10 @@ async function updateNoteInDatabase(
   );
 }
 
+async function findUserNotes(id) {
+  return await noteDatabase.find({ user_id: id });
+}
+
 module.exports = {
   getNotes,
   insertNewNoteToDatabase,
@@ -62,4 +65,5 @@ module.exports = {
   findNote,
   updateNoteInDatabase,
   findNoteTitle,
+  findUserNotes,
 };

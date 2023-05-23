@@ -1,4 +1,4 @@
-const { findUserAccount } = require('../model/user');
+const { findUserAccount, findUserByID } = require('../model/user');
 
 // create new user account
 async function validateSignUpBodyRequest(request, response, next) {
@@ -49,8 +49,21 @@ function validateLoginBodyRequest(request, response, next) {
   }
 }
 
+async function validateUserParams(request, response, next) {
+  const { id } = request.params;
+  const userExists = await findUserByID(id);
+  if (userExists) {
+    next();
+  } else {
+    response
+      .status(404)
+      .json({ status: false, message: 'No matching user ID found!' });
+  }
+}
+
 module.exports = {
   validateSignUpBodyRequest,
   validateUsernameOrEmail,
   validateLoginBodyRequest,
+  validateUserParams,
 };

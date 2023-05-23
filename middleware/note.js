@@ -1,11 +1,12 @@
 const { findNote, findNoteTitle } = require('../model/note');
+const { findUserByID } = require('../model/user');
 
 async function validateNewNoteRequest(request, response, next) {
-  const { title, text } = request.body;
-  if (!title || !text) {
+  const { title, text, user_id } = request.body;
+  if (!title || !text || !user_id) {
     response.status(400).json({
       status: false,
-      message: " 'title' & 'text' is required. please try again",
+      message: " 'title', 'text' & 'user_id' is required. please try again",
     });
   } else {
     next();

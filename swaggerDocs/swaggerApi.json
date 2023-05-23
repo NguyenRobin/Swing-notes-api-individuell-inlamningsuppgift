@@ -142,6 +142,104 @@
         }
       }
     },
+    "/api/user/notes/{user_id}": {
+      "get": {
+        "tags": ["User"],
+        "summary": "- Access user notes",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Remove 'add_your_token_here' and add your own token. To be able to access your notes",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer add_your_token_here"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "Use the 'user_id' you get when you login",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200 ✅": {
+            "description": "User notes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "title": { "type": "string" },
+                          "text": { "type": "string" },
+                          "createdAt": { "type": "string" },
+                          "_id": { "type": "string" },
+                          "modifiedAt": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/all": {
+      "get": {
+        "tags": ["User"],
+        "summary": "- Get all users",
+        "description": null,
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access all notes with valid token. Remove 'add_your_token_here' and add your token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer add_your_token_here"
+            }
+          }
+        ],
+        "responses": {
+          "200 ✅": {
+            "description": "Token is valid and notes is available in database.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "boolean" },
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "username": { "type": "string" },
+                          "email": { "type": "string" },
+                          "user_id": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/notes": {
       "get": {
         "tags": ["Note"],

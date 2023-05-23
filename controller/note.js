@@ -6,6 +6,7 @@ const {
   updateNoteInDatabase,
   findNoteTitle,
 } = require('../model/note');
+const { findUserByID } = require('../model/user');
 const createID = require('../utils/uuid');
 
 async function getAllNotes(request, response) {
@@ -26,16 +27,24 @@ async function getAllNotes(request, response) {
   }
 }
 
+//! Lägg in ID på user som lägger in en ny note
 async function createNewNote(request, response) {
   try {
-    const { title, text } = request.body;
+    const { title, text, user_id } = request.body;
     const id = createID();
     const createdAt = new Date().toLocaleDateString();
-    if (title && text) {
-      insertNewNoteToDatabase({ id, title, text, createdAt });
+    const userExists = await findUserByID(user_id);
+    console.log('userExist', userExists);
+    if (title && text && userExists) {
+      insertNewNoteToDatabase({ id, title, text, createdAt, user_id });
       response.status(200).json({
         status: true,
         message: 'New note successfully added to database',
+      });
+    } else {
+      response.status(401).json({
+        status: false,
+        message: `${!userExists ? 'user_id not found' : 'Try again'}`,
       });
     }
   } catch (error) {
